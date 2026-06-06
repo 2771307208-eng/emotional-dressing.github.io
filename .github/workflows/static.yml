@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心境小测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: #f7f3ee;
+            padding: 22px;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        .head-title {
+            text-align: center;
+            margin: 32px 0;
+            font-size: 23px;
+            color: #3c342e;
+        }
+        .wrap-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 3px 12px rgba(92,72,55,0.08);
+        }
+        .q-item {
+            margin-bottom: 30px;
+        }
+        .q-text {
+            font-size: 17px;
+            color: #2d2824;
+            margin-bottom:16px;
+            line-height:1.6;
+        }
+        .opt-item {
+            display:block;
+            padding:9px 10px;
+            margin:8px 0;
+            font-size:16px;
+            cursor:pointer;
+        }
+        #submit {
+            width:100%;
+            height:48px;
+            border:none;
+            background:#9c7b64;
+            color:#fff;
+            border-radius:12px;
+            font-size:17px;
+            margin-top:15px;
+        }
+        #submit:active{
+            background:#80624e;
+        }
+        .result-box{
+            margin-top:30px;
+            padding:20px;
+            background:#f8efe8;
+            border-radius:14px;
+            text-align:center;
+            font-size:18px;
+            display:none;
+            color:#553e30;
+            line-height:1.8;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="head-title">心境小测试</h2>
+    <div class="wrap-card">
+        <div id="allQ"></div>
+        <button id="submit">查看测试结果</button>
+        <div class="result-box" id="res"></div>
+    </div>
+
+<script>
+// 题目数据
+const qList = [
+    {
+        q:"Q1. 当你疲惫时，最想要停留在何处？",
+        opt:["A. 游乐园的摩天轮上","B. 风暴来临前的高高山崖上","C. 午后阳光里的一张旧藤椅","D. 没有人能找到的柔软云朵里"]
+    },
+    {
+        q:"Q2. 如果今天必须选一种香气陪你，你会选？",
+        opt:["A. 柑橘、薄荷等提神清亮的气味","B. 冷冽的金属气息，像雪地里的铁","C. 琥珀、香草等温暖的包裹感气味","D. 潮湿的泥土和微微发苦的树根味"]
+    },
+    {
+        q:"Q3. 前方的旅程，你想要搭乘什么风前行？",
+        opt:["A. 推着云跑的饱满大风","B. 带着海盐味、自由不羁的海风","C. 夹着青草香的温柔清风","D. 有些潮湿、让人想停下脚步的逆风"]
+    },
+    {
+        q:"Q4. 傍晚下起细雨，你透过窗户看外面，更接近的感受是？",
+        opt:["A. 雨点急促地敲打屋檐，像在痛快地击鼓","B. 雨点猛砸玻璃，像在替烦躁的自己发泄","C. 空气被洗得清透，整个世界都安静下来","D. 天色阴沉，只想裹着毯子，听雨声发呆"]
+    },
+    {
+        q:"Q5. 如果此刻的你是一种自然元素，更像什么？",
+        opt:["A. 一团明亮跃动的火焰","B. 一块棱角分明、触手冰凉的黑曜石","C. 被午后阳光晒得温热的旧木头","D. 一片深不见底、几乎没有涟漪的灰色湖水"]
+    }
+];
+
+// 结果配置
+const resText = {
+    A:"【A型结果】打鸡血、电量满格",
+    B:"【B型结果】关机、不舒服",
+    C:"【C型结果】炸毛、少管我",
+    D:"【D型结果】爱你老己、丝瓜汤"
+};
+
+const domQ = document.getElementById('allQ');
+const domRes = document.getElementById('res');
+const domBtn = document.getElementById('submit');
+
+// 渲染题目
+let html = '';
+qList.forEach((item,idx)=>{
+    html += `<div class="q-item">
+        <div class="q-text">${item.q}</div>
+        ${item.opt.map(o=>`
+            <label class="opt-item">
+                <input type="radio" name="q${idx}" value="${o[0]}"> ${o}
+            </label>
+        `).join('')}
+    </div>`;
+})
+domQ.innerHTML = html;
+
+// 统计选择、出结果
+domBtn.onclick = ()=>{
+    let count = {A:0,B:0,C:0,D:0};
+    // 循环每题取值
+    qList.forEach((_,idx)=>{
+        let sel = document.querySelector(`input[name="q${idx}"]:checked`);
+        if(sel) count[sel.value]++;
+    })
+    // 找出最多选项
+    let maxKey = Object.keys(count).sort((a,b)=>count[b]-count[a])[0];
+    domRes.style.display = 'block';
+    domRes.innerText = resText[maxKey];
+}
+</script>
+</body>
+</html>
